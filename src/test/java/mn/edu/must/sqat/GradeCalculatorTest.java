@@ -18,26 +18,26 @@ public class GradeCalculatorTest {
     }
 
     @Test
-    @DisplayName("90 оноо яг А дүн байх ёстой")
-    void letterGradeBoundaryExactly90IsA() {
+    @DisplayName("1. 90 оноо яг А дүн байх ёстой")
+    void test1_letterGradeBoundaryExactly90IsA() {
         assertEquals("A", calculator.letterGrade(90.0));
     }
 
     @Test
-    @DisplayName("89.99 оноо B дүн байх ёстой")
-    void letterGradeBoundaryJustBelow90IsB() {
+    @DisplayName("2. 89.99 оноо B дүн байх ёстой")
+    void test2_letterGradeBoundaryJustBelow90IsB() {
         assertEquals("B", calculator.letterGrade(89.99));
     }
 
     @Test
-    @DisplayName("Буруу оноонд exception шиднэ")
-    void letterGradeInvalidScoreThrowsException() {
+    @DisplayName("3. letterGrade буруу оноонд exception шиднэ")
+    void test3_letterGradeInvalidScoreThrowsException() {
         assertThrows(IllegalArgumentException.class, () -> calculator.letterGrade(-1.0));
         assertThrows(IllegalArgumentException.class, () -> calculator.letterGrade(100.1));
     }
 
     @ParameterizedTest
-    @DisplayName("letterGrade-ийн хязгааруудыг шалгах")
+    @DisplayName("4. letterGrade заагуудыг шалгах parameterized тест")
     @CsvSource({
         "95.0, A",
         "90.0, A",
@@ -48,36 +48,39 @@ public class GradeCalculatorTest {
         "59.99, F",
         "0.0, F"
     })
-    void letterGradeBoundariesParameterized(double score, String expectedGrade) {
+    void test4_letterGradeBoundariesParameterized(double score, String expectedGrade) {
         assertEquals(expectedGrade, calculator.letterGrade(score));
     }
 
     @Test
-    @DisplayName("totalScore хэвийн бодолт")
-    void totalScoreValidNormalValues() {
+    @DisplayName("5. totalScore хэвийн бодолт")
+    void test5_totalScoreValidNormalValues() {
         assertEquals(100.0, calculator.totalScore(10, 40, 10, 10, 30), 0.001);
     }
 
     @Test
-    @DisplayName("totalScore сөрөг утгад exception")
-    void totalScoreNegativeValueThrowsException() {
-        assertThrows(IllegalArgumentException.class, () -> calculator.totalScore(-5, 40, 10, 10, 30));
+    @DisplayName("6. totalScore сөрөг утгад exception")
+    void test6_totalScoreNegativeValueThrowsException() {
+        assertThrows(IllegalArgumentException.class, () -> calculator.totalScore(-1, 40, 10, 10, 30));
+        assertThrows(IllegalArgumentException.class, () -> calculator.totalScore(10, -5, 10, 10, 30));
     }
 
     @Test
-    @DisplayName("totalScore дээд хязгаар хэтрэхэд exception")
-    void totalScoreExceedingMaxLimitThrowsException() {
+    @DisplayName("7. totalScore дээд хязгаар хэтрэхэд exception")
+    void test7_totalScoreExceedingMaxLimitThrowsException() {
+        assertThrows(IllegalArgumentException.class, () -> calculator.totalScore(11, 40, 10, 10, 30));
         assertThrows(IllegalArgumentException.class, () -> calculator.totalScore(10, 41, 10, 10, 30));
+        assertThrows(IllegalArgumentException.class, () -> calculator.totalScore(10, 40, 10, 10, 31));
     }
 
     @ParameterizedTest
-    @DisplayName("totalScore parameterized тест")
+    @DisplayName("8. totalScore зөв утгуудыг шалгах parameterized тест")
     @CsvSource({
         "10, 40, 10, 10, 30, 100.0",
         "5, 20, 5, 5, 15, 50.0",
         "0, 0, 0, 0, 0, 0.0"
     })
-    void totalScoreValidCasesParameterized(double att, double lab, double q1, double q2, double exam, double expected) {
+    void test8_totalScoreValidCasesParameterized(double att, double lab, double q1, double q2, double exam, double expected) {
         assertEquals(expected, calculator.totalScore(att, lab, q1, q2, exam), 0.001);
     }
 }
